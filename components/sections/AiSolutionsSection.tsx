@@ -5,38 +5,56 @@ import { PhoneCall, MessageSquare, Settings2 } from "lucide-react";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { Container } from "@/components/ui/Container";
 import { cn } from "@/lib/utils";
-import { typography, effects, radius, spacing } from "@/lib/theme";
+import { typography, effects, radius, spacing, colors, shadow, transition } from "@/lib/theme";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 import type { ThemeSection } from "@/lib/utils/theme-validator";
 
 function AISolutionsSectionBase() {
   return (
-    <SectionWrapper id="ai-solutions">
+    <SectionWrapper 
+      id="ai-solutions"
+      data-theme-debug="AISolutionsSection"
+    >
       <Container
         glass={false}
         padding="none"
-        className="flex-1 flex items-center py-8 md:py-6 lg:py-4"
+        className={cn(
+          spacing.flex.center,
+          "py-8 md:py-6 lg:py-4"
+        )}
       >
         <div
           className={cn(
-            "w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
-            "flex flex-col items-center"
+            spacing.width.full,
+            spacing.maxWidth.container,
+            spacing.flex.col,
+            "items-center"
           )}
         >
           {/* Section Heading */}
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl lg:text-[2.25rem] font-light text-white/85 leading-[1.1] tracking-tight text-center">
+          <div className={cn(spacing.alignment.center)}>
+            <h2 className={cn(
+              typography.heading.h2,
+              colors.text.primary,
+              "font-light leading-[1.1] tracking-tight"
+            )}>
               AI Solutions That Do the Work for You
             </h2>
-            <div className="mt-6 space-y-2">
-              <p className="text-base md:text-lg text-white/65 leading-relaxed max-w-[44rem] mx-auto text-center">
+            <div className={cn(spacing.stack.sm, "mt-6")}>
+              <p className={cn(
+                typography.text.base,
+                colors.text.secondary,
+                "max-w-[44rem] mx-auto"
+              )}>
                 From missed calls to admin overload—these AI tools handle real work so you don't have to.
               </p>
             </div>
           </div>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 w-full">
+          <div className={cn(
+            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 w-full"
+          )}>
             <Card
               icon={<PhoneCall className="h-5 w-5 text-white/40 stroke-1.5" />}
               title="AI Voice Agents"
@@ -62,7 +80,9 @@ function AISolutionsSectionBase() {
                 spacing.elementSpacing,
                 effects.glass.light,
                 radius.xl,
-                "transition duration-300 hover:shadow-xl hover:scale-[1.015]",
+                transition.base,
+                shadow.card,
+                effects.hover.scale,
                 "min-h-[160px]"
               )}
             />
@@ -93,7 +113,9 @@ function AISolutionsSectionBase() {
                 spacing.elementSpacing,
                 effects.glass.light,
                 radius.xl,
-                "transition duration-300 hover:shadow-xl hover:scale-[1.015]",
+                transition.base,
+                shadow.card,
+                effects.hover.scale,
                 "min-h-[160px]"
               )}
             />
@@ -123,7 +145,9 @@ function AISolutionsSectionBase() {
                 spacing.elementSpacing,
                 effects.glass.light,
                 radius.xl,
-                "transition duration-300 hover:shadow-xl hover:scale-[1.015]",
+                transition.base,
+                shadow.card,
+                effects.hover.scale,
                 "min-h-[160px]"
               )}
             />
@@ -134,6 +158,10 @@ function AISolutionsSectionBase() {
   );
 }
 
-const AISolutionsSection = withThemeValidation(AISolutionsSectionBase, "AISolutionsSection", ["sections", "typography", "spacing", "effects", "radius"] as ThemeSection[]);
+const AISolutionsSection = withThemeValidation(
+  AISolutionsSectionBase, 
+  "AISolutionsSection", 
+  ["typography", "spacing", "radius", "colors", "effects", "shadow", "transition"] as ThemeSection[]
+);
 
 export default AISolutionsSection;

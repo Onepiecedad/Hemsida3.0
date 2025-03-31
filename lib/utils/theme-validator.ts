@@ -4,113 +4,69 @@ import {
   radius, 
   colors,
   effects,
-  border,
-  transition,
-  shadow
-} from "@/lib/theme";
-import { type Theme, type TypographyStyles, type GlassEffects } from '../theme';
+  shadow,
+  transition
+} from '../theme';
 
 export type ThemeSection = 
-  | 'typography' 
-  | 'colors' 
-  | 'spacing' 
-  | 'radius' 
-  | 'transition'
+  | 'typography'
+  | 'spacing'
+  | 'radius'
+  | 'colors'
   | 'effects'
-  | 'border'
-  | 'shadow';
+  | 'shadow'
+  | 'transition';
 
 type ThemeValue = string | number | { [key: string]: ThemeValue };
+type ThemePath = string;
 
-function getAllThemeValues(obj: any): string[] {
-  const values = new Set<string>();
+const themeTokens = {
+  typography,
+  spacing,
+  radius,
+  colors,
+  effects,
+  shadow,
+  transition
+} as const;
 
-  function traverse(current: any) {
-    if (!current) return;
-    
+type ThemeTokenKey = keyof typeof themeTokens;
+
+function getAllThemeValues(obj: Record<string, ThemeValue>, section: string): Map<string, string> {
+  const values = new Map<ThemePath, string>();
+
+  function traverse(current: ThemeValue, path: string[]) {
     if (typeof current === 'string') {
-      // Split the string in case it contains multiple classes
-      current.split(' ').forEach(cls => values.add(cls));
-    } else if (typeof current === 'object') {
-      Object.values(current).forEach(value => traverse(value));
+      values.set(path.join('.'), current);
+    } else if (typeof current === 'object' && current !== null) {
+      Object.entries(current).forEach(([key, value]) => {
+        traverse(value, [...path, key]);
+      });
     }
   }
 
-  traverse(obj);
-  return Array.from(values);
-}
-
-function classesMatch(usedClass: string, themeValue: string): boolean {
-  // Split compound classes
-  const usedParts = usedClass.split(' ');
-  const themeParts = themeValue.split(' ');
-  
-  // Check if any part matches
-  return usedParts.some(used => 
-    themeParts.some(theme => {
-      // Remove modifiers for base comparison
-      const usedBase = used.split(':').pop()?.split('/')[0] || '';
-      const themeBase = theme.split(':').pop()?.split('/')[0] || '';
-      return usedBase === themeBase || used.includes(themeBase) || theme.includes(usedBase);
-    })
-  );
+  traverse(obj, [section]);
+  return values;
 }
 
 // Hjälpfunktion för att validera att en komponent använder theme-värden
 export function validateThemeUsage(
   componentName: string,
-  usedClasses: string[],
-  allowedTokens: string[]
+  usedTokens: string[],
+  allowedTokens: ThemeSection[]
 ): boolean {
   console.log(`[Theme Debug] Validating ${componentName}`);
-  console.log(`[Theme Debug] Used classes:`, usedClasses);
-
-  const themeTokens = {
-    typography,
-    spacing,
-    radius,
-    colors,
-    effects,
-    border,
-    transition,
-    shadow
-  };
+  console.log(`[Theme Debug] Used tokens:`, usedTokens);
 
   const missingThemeValues: string[] = [];
 
   allowedTokens.forEach(section => {
-    let themeValues: string[] = [];
-    
-    switch (section) {
-      case 'typography':
-        themeValues = getAllThemeValues(typography);
-        break;
-      case 'spacing':
-        themeValues = getAllThemeValues(spacing);
-        break;
-      case 'radius':
-        themeValues = getAllThemeValues(radius);
-        break;
-      case 'colors':
-        themeValues = getAllThemeValues(colors);
-        break;
-      case 'effects':
-        themeValues = getAllThemeValues(effects);
-        break;
-      case 'border':
-        themeValues = getAllThemeValues(border);
-        break;
-      case 'transition':
-        themeValues = getAllThemeValues(transition);
-        break;
-      case 'shadow':
-        themeValues = getAllThemeValues(shadow);
-        break;
-    }
+    const themeValues = getAllThemeValues(themeTokens[section], section);
+    console.log(`[Theme Debug] ${section} values:`, Array.from(themeValues.keys()));
 
-    console.log(`[Theme Debug] ${section} values:`, themeValues);
-
-    const matches = usedClasses.filter(cls => themeValues.includes(cls));
+    const matches = usedTokens.filter(token => 
+      Array.from(themeValues.keys()).some(themePath => token.startsWith(themePath))
+    );
     console.log(`[Theme Debug] Matches found for ${section}:`, matches);
 
     if (matches.length === 0) {
@@ -135,7 +91,7 @@ export interface ThemeValidationResult {
   errors: string[];
 }
 
-export function validateTheme(theme: Partial<Theme>): ThemeValidationResult {
+export function validateTheme(theme: Record<string, unknown>): ThemeValidationResult {
   const errors: string[] = [];
   
   // Add your theme validation logic here
@@ -154,15 +110,15 @@ export function validateTheme(theme: Partial<Theme>): ThemeValidationResult {
   };
 }
 
-export function validateThemeProperty<T extends keyof Theme>(
-  theme: Partial<Theme>,
+export function validateThemeProperty<T extends ThemeTokenKey>(
+  theme: Record<string, unknown>,
   property: T,
   requiredKeys: string[]
 ): ThemeValidationResult {
   const errors: string[] = [];
   
   if (!theme[property]) {
-    errors.push(`Theme must include ${property}`);
+    errors.push(`Theme must include ${String(property)}`);
     return { isValid: false, errors };
   }
   
@@ -170,7 +126,7 @@ export function validateThemeProperty<T extends keyof Theme>(
   const missingKeys = requiredKeys.filter(key => !propertyValue[key]);
   
   if (missingKeys.length > 0) {
-    errors.push(`Missing required ${property} keys: ${missingKeys.join(', ')}`);
+    errors.push(`Missing required ${String(property)} keys: ${missingKeys.join(', ')}`);
   }
   
   return {

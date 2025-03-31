@@ -2,11 +2,12 @@
 
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { SectionHeading } from '@/components/MainHeading';
-import { spacing, typography, effects, radius } from "@/lib/theme";
+import { spacing, typography, effects, radius, colors, transition } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 import type { ThemeSection } from "@/lib/utils/theme-validator";
 import { Card } from "@/components/ui/Card";
+import { motion } from "framer-motion";
 
 interface Step {
   title: string;
@@ -65,38 +66,68 @@ const steps: Step[] = [
 
 function HowItWorksSectionBase() {
   return (
-    <SectionWrapper id="how-it-works">
+    <SectionWrapper 
+      id="how-it-works"
+      data-theme-debug="HowItWorksSection"
+    >
       <SectionHeading
         title="Your AI Employee—Fully Trained in Days, No Effort Required"
         subtitle="You focus on the results—we'll handle the setup. Just follow 4 simple steps."
       />
 
       <div className={spacing.container}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-12 w-full">
+        <div className={cn(
+          "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mt-12 w-full"
+        )}>
           {steps.map((step, index) => (
-            <Card
+            <motion.div
               key={index}
-              icon={
-                <div className={cn(typography.icon, "rounded-full bg-white/10")}>
-                  {index + 1}
-                </div>
-              }
-              title={step.title}
-              description={step.description}
-              cta={
-                <>
-                  <p className={cn(typography.heading.h4, "text-primary mb-4")}>{step.subtitle}</p>
-                  <ul className={cn(spacing.stack.sm, "list-disc pl-6")}>
-                    {step.details.map((detail, detailIndex) => (
-                      <li key={detailIndex} className={typography.paragraph}>{detail}</li>
-                    ))}
-                  </ul>
-                  <p className="mt-4">💬 Talk to Dana to learn more about this step.</p>
-                </>
-              }
-              showDanaButton={true}
-              className="min-h-[160px]"
-            />
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              className="relative"
+            >
+              <Card
+                icon={
+                  <div className={cn(
+                    typography.icon,
+                    radius.lg,
+                    "bg-white/10 w-8 h-8 flex items-center justify-center",
+                    effects.glass.light,
+                    effects.hover.scale
+                  )}>
+                    {index + 1}
+                  </div>
+                }
+                title={step.title}
+                description={step.description}
+                cta={
+                  <>
+                    <p className={cn(typography.heading.h4, colors.text.accent, "mb-4")}>{step.subtitle}</p>
+                    <ul className={cn(spacing.stack.sm, "list-disc pl-6")}>
+                      {step.details.map((detail, detailIndex) => (
+                        <li key={detailIndex} className={cn(typography.paragraph, "flex items-start gap-2")}>
+                          <span className={colors.text.accent}>•</span>
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className={cn("mt-4", typography.text.secondary)}>💬 Talk to Dana to learn more about this step.</p>
+                  </>
+                }
+                showDanaButton={true}
+                className={cn(
+                  "min-h-[160px]",
+                  "relative",
+                  "before:absolute before:left-0 before:top-0 before:w-1 before:h-full",
+                  "before:bg-gradient-to-b before:from-primary before:to-primary/50",
+                  "before:rounded-l-full",
+                  "before:opacity-0 hover:before:opacity-100",
+                  transition.base
+                )}
+              />
+            </motion.div>
           ))}
         </div>
       </div>
@@ -104,4 +135,8 @@ function HowItWorksSectionBase() {
   );
 }
 
-export const HowItWorksSection = withThemeValidation(HowItWorksSectionBase, "HowItWorksSection", ["sections", "typography", "spacing", "effects"] as ThemeSection[]); 
+export const HowItWorksSection = withThemeValidation(
+  HowItWorksSectionBase, 
+  "HowItWorksSection", 
+  ["typography", "spacing", "radius", "colors", "effects", "transition"] as ThemeSection[]
+); 

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { effects, border, radius } from "@/lib/theme";
+import { effects, radius } from "@/lib/theme";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 
 type GlassIntensity = "light" | "lighter";
@@ -27,7 +27,7 @@ function GlassLayerBase({
     <div 
       className={cn(
         intensity === "light" ? effects.glass.light : effects.glass.lighter,
-        !noBorder && border.glass,
+        !noBorder && "border border-white/10",
         !noShadow && "shadow-lg",
         radius[rounded],
         effects.transition.base,
@@ -43,5 +43,5 @@ function GlassLayerBase({
 export const GlassLayer = withThemeValidation(
   GlassLayerBase,
   "GlassLayer",
-  ["effects", "border", "radius"]
+  ["effects", "radius"]
 ); 

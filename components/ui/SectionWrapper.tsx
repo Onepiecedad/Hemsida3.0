@@ -1,7 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { spacing } from "@/lib/theme";
+import { spacing, transition } from "@/lib/theme";
+import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
+import type { ThemeSection } from "@/lib/utils/theme-validator";
 
 interface SectionWrapperProps {
   children: React.ReactNode;
@@ -10,7 +12,7 @@ interface SectionWrapperProps {
   "data-theme-debug"?: string;
 }
 
-export function SectionWrapper({
+function SectionWrapperBase({
   children,
   className,
   id,
@@ -20,18 +22,23 @@ export function SectionWrapper({
     <section
       id={id}
       className={cn(
-        "relative w-full",
-        "min-h-screen",
-        "flex flex-col",
-        "items-center justify-center",
+        spacing.width.full,
+        spacing.height.full,
+        spacing.flex.col,
+        spacing.flex.center,
         spacing.section.base,
+        transition.base,
         className
       )}
-      data-theme-debug={dataThemeDebug}
+      data-theme-debug={dataThemeDebug || "SectionWrapper"}
     >
       {children}
     </section>
   );
 }
 
-SectionWrapper.displayName = "SectionWrapper"; 
+export const SectionWrapper = withThemeValidation(
+  SectionWrapperBase,
+  "SectionWrapper",
+  ["typography", "spacing", "radius", "colors", "effects", "border", "shadow", "transition"] as ThemeSection[]
+); 

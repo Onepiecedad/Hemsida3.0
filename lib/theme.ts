@@ -29,6 +29,9 @@ export const spacing = {
     section: "px-6 md:px-12",
     none: "",
     modal: "p-6 md:p-8",
+    top: {
+      md: "pt-4",
+    },
   },
   width: {
     full: "w-full",
@@ -39,11 +42,20 @@ export const spacing = {
     full: "h-full",
     screen: "h-screen",
     auto: "h-auto",
+    modal: "max-h-[90vh]",
+  },
+  position: {
+    fixed: "fixed inset-0",
+    relative: "relative",
+  },
+  z: {
+    modal: "z-50",
   },
   alignment: {
     left: "text-left",
     center: "text-center",
     right: "text-right",
+    start: "justify-start",
   },
   container: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
   stack: {
@@ -55,12 +67,31 @@ export const spacing = {
     center: "flex items-center justify-center",
     between: "flex items-center justify-between",
     col: "flex flex-col",
+    none: "flex-none",
+    one: "flex-1",
+    row: "flex items-center",
+    responsive: "flex flex-col md:flex-row",
+  },
+  gap: {
+    sm: "gap-2",
+    md: "gap-4",
+    lg: "gap-8",
+  },
+  icon: {
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
   },
   section: {
     base: "relative min-h-screen",
     padding: "px-6 md:px-12",
   },
   elementSpacing: "space-y-4",
+  overflow: {
+    y: {
+      auto: "overflow-y-auto",
+    },
+  },
   maxWidth: {
     sm: "max-w-sm",
     md: "max-w-md",
@@ -76,11 +107,17 @@ export const colors = {
     primary: "text-white",
     secondary: "text-white/70",
     accent: "text-blue-400",
+    tertiary: "text-white/50",
+    logo: {
+      icon: "text-blue-400",
+      text: "text-white",
+    },
   },
   background: {
     card: "bg-white/5",
     glass: "bg-white/5",
     glassHover: "hover:bg-white/10",
+    dark: "#1a1a1a",
   },
   primary: "#60a5fa",
   primaryHover: "#3b82f6",
@@ -91,14 +128,19 @@ export const typography = {
     base: "text-base leading-relaxed",
     secondary: "text-sm",
     sm: "text-sm leading-relaxed",
+    lg: "text-lg leading-relaxed",
   },
   heading: {
+    h1: "text-4xl md:text-5xl lg:text-6xl font-light leading-tight",
+    h2: "text-2xl md:text-3xl lg:text-[2.25rem] font-light leading-[1.1] tracking-tight",
     h3: "text-xl font-semibold",
     h4: "text-lg font-medium",
   },
   icon: "text-lg",
   paragraph: "text-base leading-relaxed text-white/80",
   buttonText: "text-sm font-medium",
+  label: "text-sm font-medium",
+  logo: "text-xl font-semibold",
 };
 
 export const radius = {
@@ -124,6 +166,7 @@ export const shadow = {
   md: "shadow-md",
   lg: "shadow-lg",
   xl: "shadow-xl",
+  modal: "shadow-2xl",
 };
 
 export const transition = {

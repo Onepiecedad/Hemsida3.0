@@ -4,6 +4,7 @@ import { Logo } from "@/components/ui/Logo";
 import { Container } from "@/components/ui/Container";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { cn } from "@/lib/utils";
+import { typography, spacing, colors } from "@/lib/theme";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 import type { ThemeSection } from "@/lib/utils/theme-validator";
 
@@ -12,6 +13,7 @@ function HeroSectionBase() {
     <SectionWrapper
       id="hero"
       className="relative"
+      data-theme-debug="HeroSection"
     >
       {/* Logo positioned absolutely */}
       <Logo className="absolute top-8 left-8 md:left-12" />
@@ -20,48 +22,50 @@ function HeroSectionBase() {
       <Container
         glass={false}
         padding="none"
-        className="flex-1 flex items-center"
+        className={cn(
+          spacing.flex.center,
+          "flex-1"
+        )}
       >
         <div
           className={cn(
-            "w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+            spacing.width.full,
+            spacing.maxWidth.container,
             "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20"
           )}
         >
           {/* Left column */}
           <div
             className={cn(
-              "flex flex-col justify-center",
-              "text-left",
-              "max-w-2xl"
+              spacing.flex.col,
+              "justify-center",
+              spacing.alignment.left,
+              spacing.maxWidth.xl
             )}
           >
             <h1 
               className={cn(
-                "text-4xl md:text-5xl lg:text-6xl",
-                "font-light",
-                "text-white/70",
-                "tracking-normal",
-                "leading-tight",
-                "mt-6 mb-4"
+                typography.heading.h1,
+                colors.text.primary,
+                "font-light tracking-normal leading-tight mt-6 mb-4"
               )}
             >
               What If Growing Your Business Didn't Mean More Work?
             </h1>
 
-            <div className="space-y-6">
+            <div className={cn(spacing.stack.lg)}>
               <h2 
                 className={cn(
-                  "text-lg md:text-xl",
-                  "text-white/80"
+                  typography.heading.h2,
+                  colors.text.secondary
                 )}
               >
                 What If AI Could Handle 80% of Your Work—Effortlessly?
               </h2>
               <h3 
                 className={cn(
-                  "text-base",
-                  "text-white/60"
+                  typography.text.base,
+                  colors.text.secondary
                 )}
               >
                 What If You Had an Employee That Worked 24/7—For Free?
@@ -77,6 +81,10 @@ function HeroSectionBase() {
   );
 }
 
-const HeroSection = withThemeValidation(HeroSectionBase, "HeroSection", ["sections", "typography", "spacing"] as ThemeSection[]); 
+const HeroSection = withThemeValidation(
+  HeroSectionBase, 
+  "HeroSection", 
+  ["typography", "spacing", "radius", "colors", "effects", "shadow", "transition"] as ThemeSection[]
+);
 
 export default HeroSection; 

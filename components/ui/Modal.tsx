@@ -2,41 +2,74 @@
 
 import { Dialog } from "@headlessui/react";
 import { cn } from "@/lib/utils";
-import { typography, effects, radius, spacing } from "@/lib/theme";
+import { spacing, radius, colors, effects, shadow, transition } from "@/lib/theme";
+import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
+import type { ThemeSection } from "@/lib/utils/theme-validator";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function Modal({ isOpen, onClose, children }: ModalProps) {
+function ModalBase({ isOpen, onClose, children, className }: ModalProps) {
   return (
     <Dialog
       open={isOpen}
       onClose={onClose}
-      className="relative z-50"
+      className={cn(
+        spacing.position.relative,
+        spacing.z.modal,
+        effects.transition.base,
+        className
+      )}
+      data-theme-debug={`Modal:isOpen=${isOpen}`}
     >
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
+      <div 
+        className={cn(
+          spacing.position.fixed,
+          colors.background.glass,
+          effects.glass.light
+        )} 
+        aria-hidden="true" 
+      />
 
       {/* Full-screen container */}
-      <div className="fixed inset-0 flex items-center justify-center p-4">
+      <div className={cn(
+        spacing.position.fixed,
+        spacing.flex.center,
+        spacing.padding.card
+      )}>
         <Dialog.Panel
           className={cn(
             effects.glass.light,
             radius.xl,
             spacing.padding.modal,
-            "w-full max-w-xl",
-            "max-h-[90vh]",
-            "flex flex-col"
+            spacing.width.full,
+            spacing.maxWidth.xl,
+            spacing.height.modal,
+            spacing.flex.col,
+            shadow.modal,
+            transition.base
           )}
         >
-          <div className="overflow-y-auto flex-1">
+          <div className={cn(
+            spacing.flex.one,
+            spacing.overflow.y.auto,
+            spacing.elementSpacing
+          )}>
             {children}
           </div>
         </Dialog.Panel>
       </div>
     </Dialog>
   );
-} 
+}
+
+export const Modal = withThemeValidation(
+  ModalBase,
+  "Modal",
+  ["typography", "spacing", "radius", "colors", "effects", "border", "shadow", "transition"] as ThemeSection[]
+); 

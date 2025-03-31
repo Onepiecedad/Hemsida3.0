@@ -31,6 +31,7 @@ function AnimatedSectionBase({
         useGlass && effects.glass.light,
         className
       )}
+      data-theme-debug={`AnimatedSection:useGlass=${useGlass}`}
       {...props}
     >
       <div className={cn(

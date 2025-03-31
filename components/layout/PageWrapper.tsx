@@ -1,5 +1,4 @@
 import React from 'react';
-import { spacing } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 import type { ThemeSection } from "@/lib/utils/theme-validator";

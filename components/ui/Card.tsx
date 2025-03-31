@@ -5,10 +5,12 @@ import {
   spacing, 
   radius, 
   colors, 
-  effects
+  effects,
+  transition
 } from "@/lib/theme";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 import { Modal } from "@/components/ui/Modal";
+import type { ThemeSection } from "@/lib/utils/theme-validator";
 
 export interface CardProps {
   title: string;
@@ -42,9 +44,10 @@ function CardBase({
           effects.hover.scale,
           radius.xl,
           spacing.padding.card,
-          effects.transition.base,
+          transition.base,
           spacing.width.full,
           spacing.height.full,
+          typography.text.base,
           spacing.alignment.left,
           effects.interaction.cursor.pointer,
           className
@@ -56,20 +59,20 @@ function CardBase({
           }
         }}
         tabIndex={0}
-        data-theme-debug="Card"
+        data-theme-debug={`Card:title=${title},hasIcon=${!!icon},hasDescription=${!!description}`}
       >
-        <div className="flex flex-col gap-4">
+        <div className={cn(spacing.flex.col, spacing.stack.md)}>
           {icon && (
-            <div className="flex items-center justify-start">
+            <div className={cn(spacing.flex.center, spacing.alignment.start)}>
               {icon}
             </div>
           )}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-lg md:text-xl font-medium text-white/90">
+          <div className={cn(spacing.flex.col, spacing.stack.sm)}>
+            <h3 className={cn(typography.heading.h3, colors.text.primary)}>
               {title}
             </h3>
             {description && (
-              <p className="text-sm md:text-base text-white/60 leading-relaxed">
+              <p className={cn(typography.text.sm, colors.text.secondary)}>
                 {description}
               </p>
             )}
@@ -77,46 +80,44 @@ function CardBase({
         </div>
       </button>
 
-      {isOpen && (
-        <Modal onClose={handleClose} isOpen={isOpen}>
-          <div className="flex flex-col h-full">
-            <div className="flex-none">
-              <div className={cn(spacing.flex.between, spacing.stack.md)}>
-                <div>
-                  {icon && <div className={cn(typography.icon, spacing.stack.md)}>{icon}</div>}
-                  <h3 className={typography.heading.h3}>{title}</h3>
-                  {description && <p className={cn(typography.text.base, spacing.stack.sm)}>{description}</p>}
-                </div>
+      <Modal isOpen={isOpen} onClose={handleClose}>
+        <div className={cn(spacing.flex.col, spacing.height.full)}>
+          <div className={cn(spacing.flex.none)}>
+            <div className={cn(spacing.flex.between, spacing.stack.md)}>
+              <div>
+                {icon && <div className={cn(typography.text.sm, spacing.stack.md)}>{icon}</div>}
+                <h3 className={typography.heading.h3}>{title}</h3>
+                {description && <p className={cn(typography.text.sm, colors.text.secondary, spacing.stack.sm)}>{description}</p>}
               </div>
             </div>
-            
-            <div className="flex-1 overflow-y-auto py-4">
-              {cta && <div className={cn(typography.paragraph)}>{cta}</div>}
-            </div>
-
-            <div className="flex-none pt-4">
-              {showDanaButton && (
-                <button
-                  onClick={onDanaClick}
-                  className={cn(
-                    typography.buttonText,
-                    colors.text.primary,
-                    effects.glass.lighter,
-                    effects.hover.scale,
-                    radius.lg,
-                    spacing.padding.card,
-                    spacing.stack.md,
-                    effects.transition
-                  )}
-                  data-theme-debug="Card-Button"
-                >
-                  Talk to Dana
-                </button>
-              )}
-            </div>
           </div>
-        </Modal>
-      )}
+          
+          <div className={cn(spacing.flex.one, spacing.overflow.y.auto, spacing.padding.card)}>
+            {cta && <div className={cn(typography.text.sm, colors.text.secondary)}>{cta}</div>}
+          </div>
+
+          <div className={cn(spacing.flex.none, spacing.padding.top.md)}>
+            {showDanaButton && (
+              <button
+                onClick={onDanaClick}
+                className={cn(
+                  typography.buttonText,
+                  colors.text.primary,
+                  effects.glass.light,
+                  effects.hover.scale,
+                  radius.lg,
+                  spacing.padding.card,
+                  spacing.stack.md,
+                  transition.base
+                )}
+                data-theme-debug={`Card-Button:onClick=${!!onDanaClick}`}
+              >
+                Talk to Dana
+              </button>
+            )}
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
@@ -124,5 +125,5 @@ function CardBase({
 export const Card = withThemeValidation(
   CardBase,
   "Card",
-  ["typography", "spacing", "radius", "colors", "effects"]
+  ["typography", "spacing", "radius", "colors", "effects", "transition"] as ThemeSection[]
 ); 

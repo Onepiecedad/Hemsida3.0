@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export function ContactSection() {
   return (
-    <section id="contact" className={spacing.padding.sectionY}>
+    <section id="contact" className={spacing.section.base}>
       <div className={spacing.maxWidth.container}>
         <h2 className={cn(typography.heading.h2, "text-center")}>
           Get in Touch
