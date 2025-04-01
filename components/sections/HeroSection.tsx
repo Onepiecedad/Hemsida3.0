@@ -1,7 +1,7 @@
 "use client";
 
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { spacing, typography, colors, effects } from "@/lib/theme";
+import { spacing, typography, colors, effects, layout } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { withThemeValidation } from "@/lib/hoc/withThemeValidation";
 import { ThemeSection } from "@/types/theme-sections";
@@ -12,14 +12,14 @@ import { Logo } from "@/components/ui/Logo";
 
 // Dynamically import Card component since it's below the fold
 const Card = dynamic(() => import("@/components/ui/Card"), {
-  loading: () => <div className="animate-pulse bg-white/5 rounded-2xl h-64" />,
+  loading: () => <div className={cn(effects.loading.pulse, colors.background.glass, spacing.rounded.xl, "h-64")} />,
   ssr: true
 });
 
 const HeroSectionBase: React.FC = () => {
   return (
     <SectionWrapper id="hero" className={cn(spacing.section.base)}>
-      <div className={cn("absolute top-8 left-8 md:left-12")}>
+      <div className={cn(layout.position.topLeft)}>
         <Logo priority={true} />
       </div>
 
@@ -27,28 +27,28 @@ const HeroSectionBase: React.FC = () => {
         <div className={cn(
           spacing.flex.row,
           spacing.gap.lg,
-          "items-center"
+          layout.align.center
         )}>
           {/* Left Column - Text Content */}
-          <div className={cn(spacing.flex.col, spacing.gap.md, "flex-1")}>
+          <div className={cn(spacing.flex.col, spacing.gap.md, layout.flex.grow)}>
             <div className={cn(
               spacing.flex.col,
-              "gap-8",
+              spacing.gap.lg,
               spacing.maxWidth["2xl"]
             )}>
               <h1 className={cn(
                 typography.heading.display,
                 colors.text.primary,
                 effects.transition.base,
-                "mb-4",
-                "leading-tight"
+                typography.spacing.mb4,
+                typography.leading.tight
               )}>
                 What if growing your business didn't mean more work?
               </h1>
               
               <div className={cn(
                 spacing.flex.col,
-                "gap-[1.4rem]"
+                spacing.gap.custom["1.4"]
               )}>
                 <p className={cn(
                   typography.text.xl,
@@ -71,12 +71,12 @@ const HeroSectionBase: React.FC = () => {
 
           {/* Right Column - Card */}
           <div className={cn(
-            "flex-1",
-            "flex items-center justify-center",
-            "pt-4",
-            "min-h-[28rem]"
+            layout.flex.grow,
+            layout.flex.center,
+            spacing.padding.top4,
+            layout.size.minH28
           )}>
-            <Suspense fallback={<div className="animate-pulse bg-white/5 rounded-2xl h-64" />}>
+            <Suspense fallback={<div className={cn(effects.loading.pulse, colors.background.glass, spacing.rounded.xl, "h-64")} />}>
               <Card
                 icon={<MessageCircle className={cn(typography.icon, colors.text.accent)} />}
                 title="Want to save 10+ hours a week—without changing how you work?"
@@ -98,5 +98,5 @@ const HeroSectionBase: React.FC = () => {
 export default withThemeValidation(
   HeroSectionBase,
   "HeroSection",
-  ["spacing", "typography", "colors", "effects"] as ThemeSection[]
+  ["spacing", "typography", "colors", "effects", "layout"] as ThemeSection[]
 );
